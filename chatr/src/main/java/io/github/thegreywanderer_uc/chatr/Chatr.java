@@ -1,8 +1,6 @@
 package io.github.thegreywanderer_uc.chatr;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
@@ -14,7 +12,8 @@ import net.minecraft.server.level.ClientInformation;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.level.ServerEntity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityType as MinecraftEntityType;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,13 +25,14 @@ import org.bukkit.craftbukkit.v1_21_R6.CraftServer;
 import org.bukkit.craftbukkit.v1_21_R6.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R6.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.jetbrains.annotations.NotNull;
+import io.papermc.paper.profile.ProfileResolver;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +41,7 @@ import java.util.*;
 public final class Chatr extends JavaPlugin implements CommandExecutor, Listener {
     private FileConfiguration config; // To store config values
     private final Map<String, ServerPlayer> npcs = new HashMap<>(); // Store NPCs by name
+    private final Map<String, ArmorStand> npcEntities = new HashMap<>(); // Store real entities for interaction
     private final Map<String, String> npcWorlds = new HashMap<>(); // Store NPC world names
     private final Map<String, String> npcSkins = new HashMap<>(); // Store NPC skin player names
     private FileConfiguration npcConfig;
@@ -186,6 +187,17 @@ public final class Chatr extends JavaPlugin implements CommandExecutor, Listener
     }
 
     private void createNpc(String name, Location loc, UUID uuid) {
+        // Spawn real ArmorStand for interaction
+        ArmorStand armorStand = (ArmorStand) loc.getWorld().spawnEntity(loc, org.bukkit.entity.EntityType.ARMOR_STAND);
+        armorStand.setVisible(false); // Make it invisible
+        armorStand.setGravity(false); // Don't fall
+        armorStand.setInvulnerable(true); // Can't be damaged
+        armorStand.setCustomName(name); // Set name for identification
+        armorStand.setCustomNameVisible(false); // Don't show name tag
+        armorStand.setSmall(true); // Make it smaller
+        armorStand.setMarker(true); // Remove hitbox for better interaction
+
+        // Create ServerPlayer for visual packets
         MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
         ServerLevel world = ((CraftWorld) loc.getWorld()).getHandle();
         GameProfile profile = new GameProfile(uuid, name);
@@ -194,13 +206,17 @@ public final class Chatr extends JavaPlugin implements CommandExecutor, Listener
         npc.setXRot(loc.getPitch());
         npc.setYRot(loc.getYaw());
         npc.getEntityData().set(SKIN_LAYERS, (byte) 127); // Show all skin layers
+
         npcs.put(name, npc);
+        npcEntities.put(name, armorStand);
         npcWorlds.put(name, loc.getWorld().getName());
         npcSkins.put(name, "");
-        // Send to all online players
+
+        // Send visual packets to all online players
         for (Player p : Bukkit.getOnlinePlayers()) {
             sendSpawnPackets(p, npc);
         }
+
         // Schedule removal from tablist
         Bukkit.getScheduler().runTaskLater(this, () -> {
             for (Player p : Bukkit.getOnlinePlayers()) {
@@ -208,11 +224,30 @@ public final class Chatr extends JavaPlugin implements CommandExecutor, Listener
                 conn.send(new ClientboundPlayerInfoRemovePacket(List.of(npc.getUUID())));
             }
         }, 40);
+
         saveNpcs();
     }
 
     private void removeNpc(ServerPlayer npc) {
-        // Send remove to all online players
+        // Find the NPC name
+        String npcName = null;
+        for (Map.Entry<String, ServerPlayer> entry : npcs.entrySet()) {
+            if (entry.getValue().equals(npc)) {
+                npcName = entry.getKey();
+                break;
+            }
+        }
+
+        if (npcName != null) {
+            // Remove the ArmorStand
+            ArmorStand armorStand = npcEntities.get(npcName);
+            if (armorStand != null && !armorStand.isDead()) {
+                armorStand.remove();
+            }
+            npcEntities.remove(npcName);
+        }
+
+        // Send visual remove packets to all online players
         for (Player p : Bukkit.getOnlinePlayers()) {
             ServerGamePacketListenerImpl conn = ((CraftPlayer) p).getHandle().connection;
             conn.send(new ClientboundPlayerInfoRemovePacket(List.of(npc.getUUID())));
@@ -292,7 +327,7 @@ public final class Chatr extends JavaPlugin implements CommandExecutor, Listener
     private void sendSpawnPackets(Player player, ServerPlayer npc) {
         ServerGamePacketListenerImpl conn = ((CraftPlayer) player).getHandle().connection;
         // conn.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, npc));
-        conn.send(new ClientboundAddEntityPacket(npc.getId(), npc.getUUID(), npc.getX(), npc.getY(), npc.getZ(), npc.getYRot(), npc.getXRot(), EntityType.PLAYER, 0, npc.getDeltaMovement(), npc.getYRot()));
+        conn.send(new ClientboundAddEntityPacket(npc.getId(), npc.getUUID(), npc.getX(), npc.getY(), npc.getZ(), npc.getYRot(), npc.getXRot(), MinecraftEntityType.PLAYER, 0, npc.getDeltaMovement(), npc.getYRot()));
         conn.send(new ClientboundSetEntityDataPacket(npc.getId(), npc.getEntityData().getNonDefaultValues()));
         conn.send(new ClientboundRotateHeadPacket(npc, (byte) (npc.getYRot() * 256 / 360)));
     }
@@ -302,6 +337,27 @@ public final class Chatr extends JavaPlugin implements CommandExecutor, Listener
         Player player = event.getPlayer();
         for (ServerPlayer npc : npcs.values()) {
             sendSpawnPackets(player, npc);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        if (event.getRightClicked() instanceof ArmorStand) {
+            ArmorStand armorStand = (ArmorStand) event.getRightClicked();
+            // Check if this ArmorStand is one of our NPCs
+            String npcName = null;
+            for (Map.Entry<String, ArmorStand> entry : npcEntities.entrySet()) {
+                if (entry.getValue().equals(armorStand)) {
+                    npcName = entry.getKey();
+                    break;
+                }
+            }
+            if (npcName != null) {
+                // Handle NPC interaction
+                Player player = event.getPlayer();
+                player.sendMessage(ChatColor.GREEN + "[NPC] " + ChatColor.YELLOW + npcName + ChatColor.WHITE + ": Hello! I'm " + npcName + ".");
+                event.setCancelled(true); // Prevent default interaction
+            }
         }
     }
 
