@@ -1,0 +1,31 @@
+# NPC AI Configuration for {npc_name}
+# This file contains AI settings specific to this NPC.
+# If a setting is commented out, the global default from config.yml will be used.
+
+# AI Server Configuration
+ai:
+  # Override the global server URL for this NPC
+  # server-url: "http://your-custom-server:1234"
+
+  # Override the global model for this NPC
+  # model: "your-custom-model-name"
+
+  # Override AI generation parameters for this NPC
+  # temperature: 0.8
+  # top-p: 0.95
+  # top-k: 40
+
+  # Maximum response length for this NPC
+  # max-tokens: 300
+
+# System Prompt (REQUIRED for AI responses)
+# This defines the NPC's personality and behavior.
+# If this is empty or missing, the NPC cannot respond to AI queries.
+system-prompt: |
+  You are a helpful NPC in a Minecraft world. You can answer questions about Minecraft,
+  provide helpful information, and engage in friendly conversation.
+  Keep your responses appropriate for all ages and stay in character as a Minecraft NPC.
+
+# Chat Logging
+# All conversations with this NPC will be logged to chat.log in this folder
+enable-chat-logging: true
