@@ -1,5 +1,0 @@
-# Chatr Config
-chat-prefix: "&6[Chatr] "  # Gold prefix
-enable-message: "&2Chatr plugin has been enabled!"
-disable-message: "&6Chatr plugin has been disabled."
-enable-logging: true
