@@ -1,0 +1,25 @@
+name: Chatr
+version: '1.0-SNAPSHOT'
+main: io.github.thegreywanderer_uc.chatr.Chatr
+api-version: '1.21.10'
+commands:
+  chatr:
+    description: Main command for Chatr plugin.
+    usage: /chatr <subcommand> [args]
+    permission: chatr.use
+permissions:
+  chatr.use:
+    description: Allows use of basic /chatr commands.
+    default: true
+  chatr.reload:
+    description: Allows reloading the config.
+    default: op
+  chatr.create:
+    description: Allows creating NPCs.
+    default: op
+  chatr.remove:
+    description: Allows removing NPCs.
+    default: op
+  chatr.skin:
+    description: Allows setting NPC skins.
+    default: op
