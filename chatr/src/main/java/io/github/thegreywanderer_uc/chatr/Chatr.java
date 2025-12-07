@@ -12,7 +12,7 @@ import net.minecraft.server.level.ClientInformation;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.level.ServerEntity;
-import net.minecraft.world.entity.EntityType as MinecraftEntityType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,8 +35,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import io.papermc.paper.profile.ProfileResolver;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+import java.util.concurrent.CompletableFuture;
 
 public final class Chatr extends JavaPlugin implements CommandExecutor, Listener {
     private FileConfiguration config; // To store config values
@@ -327,7 +330,7 @@ public final class Chatr extends JavaPlugin implements CommandExecutor, Listener
     private void sendSpawnPackets(Player player, ServerPlayer npc) {
         ServerGamePacketListenerImpl conn = ((CraftPlayer) player).getHandle().connection;
         // conn.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, npc));
-        conn.send(new ClientboundAddEntityPacket(npc.getId(), npc.getUUID(), npc.getX(), npc.getY(), npc.getZ(), npc.getYRot(), npc.getXRot(), MinecraftEntityType.PLAYER, 0, npc.getDeltaMovement(), npc.getYRot()));
+        conn.send(new ClientboundAddEntityPacket(npc.getId(), npc.getUUID(), npc.getX(), npc.getY(), npc.getZ(), npc.getYRot(), npc.getXRot(), net.minecraft.world.entity.EntityType.PLAYER, 0, npc.getDeltaMovement(), npc.getYRot()));
         conn.send(new ClientboundSetEntityDataPacket(npc.getId(), npc.getEntityData().getNonDefaultValues()));
         conn.send(new ClientboundRotateHeadPacket(npc, (byte) (npc.getYRot() * 256 / 360)));
     }
@@ -353,12 +356,87 @@ public final class Chatr extends JavaPlugin implements CommandExecutor, Listener
                 }
             }
             if (npcName != null) {
-                // Handle NPC interaction
+                // Handle NPC interaction with REST API call
                 Player player = event.getPlayer();
-                player.sendMessage(ChatColor.GREEN + "[NPC] " + ChatColor.YELLOW + npcName + ChatColor.WHITE + ": Hello! I'm " + npcName + ".");
+                player.sendMessage(ChatColor.GREEN + "[NPC] " + ChatColor.YELLOW + npcName + ChatColor.WHITE + ": Hello! Let me check something...");
+
+                // Make async REST API call
+                makeRestApiCall("GET", "https://httpbin.org/get?name=" + npcName, null)
+                    .thenAccept(response -> {
+                        // Process response on main thread
+                        Bukkit.getScheduler().runTask(this, () -> {
+                            player.sendMessage(ChatColor.GREEN + "[NPC] " + ChatColor.YELLOW + npcName +
+                                ChatColor.WHITE + ": API says: " + response.substring(0, Math.min(100, response.length())));
+                        });
+                    })
+                    .exceptionally(throwable -> {
+                        // Handle error on main thread
+                        Bukkit.getScheduler().runTask(this, () -> {
+                            player.sendMessage(ChatColor.RED + "[NPC] " + ChatColor.YELLOW + npcName +
+                                ChatColor.WHITE + ": Sorry, I couldn't reach the API right now.");
+                        });
+                        return null;
+                    });
+
                 event.setCancelled(true); // Prevent default interaction
             }
         }
+    }
+
+    /**
+     * Makes an asynchronous REST API call
+     * @param method HTTP method (GET, POST, PUT, DELETE)
+     * @param url The API endpoint URL
+     * @param body Request body (null for GET requests)
+     * @return CompletableFuture with the response string
+     */
+    private CompletableFuture<String> makeRestApiCall(String method, String url, String body) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("User-Agent", "Chatr-Minecraft-Plugin/1.0")
+                    .header("Accept", "application/json");
+
+                // Set HTTP method and body
+                switch (method.toUpperCase()) {
+                    case "GET":
+                        requestBuilder.GET();
+                        break;
+                    case "POST":
+                        requestBuilder.POST(body != null ?
+                            HttpRequest.BodyPublishers.ofString(body) :
+                            HttpRequest.BodyPublishers.noBody());
+                        requestBuilder.header("Content-Type", "application/json");
+                        break;
+                    case "PUT":
+                        requestBuilder.PUT(body != null ?
+                            HttpRequest.BodyPublishers.ofString(body) :
+                            HttpRequest.BodyPublishers.noBody());
+                        requestBuilder.header("Content-Type", "application/json");
+                        break;
+                    case "DELETE":
+                        requestBuilder.DELETE();
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+                }
+
+                HttpRequest request = requestBuilder.build();
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                    return response.body();
+                } else {
+                    throw new RuntimeException("API returned status: " + response.statusCode() + " - " + response.body());
+                }
+
+            } catch (Exception e) {
+                getLogger().warning("REST API call failed: " + e.getMessage());
+                throw new RuntimeException("API call failed", e);
+            }
+        });
     }
 
     /**
