@@ -878,36 +878,43 @@ public class ServerAI implements Listener {
             }
         }
         
-        // Build a focused scan prompt - no analysis output, just respond or not
-        String scanPrompt = String.format("""
-            You are %s, the server AI. Review this recent chat and decide if you should respond.
-            
-            Recent chat:
-            ---
-            %s
-            ---
-            
-            %s
-            Decide:
-            - If someone needs help with Minecraft, provide the answer directly.
-            - If there's a conflict, calmly mediate.
-            - If there's a fun conversation (%.0f%% chance), you may join naturally.
-            - Otherwise, do NOT respond.
-            
-            If you choose to respond, write ONLY your chat message - nothing else.
-            If you choose NOT to respond, reply with exactly: NO_RESPONSE
-            
-            No explanations, no analysis - just your message or NO_RESPONSE.
-            """, name, chatLog.toString(), 
-               ragContext.isEmpty() ? "" : "Relevant knowledge from server documentation:\n" + ragContext + "\n\n",
-               conversationJoinChance * 100);
+        // Use the same conversation format as direct messages
+        List<Map<String, Object>> messages = new ArrayList<>();
         
-        makeAiCall(scanPrompt, "Analyze and respond if appropriate")
+        // Build contextual system prompt
+        String systemPrompt = buildContextualSystemPrompt(this.systemPrompt, null);
+        if (ragContext != null && !ragContext.isEmpty()) {
+            systemPrompt += "\n\nRelevant knowledge from server documentation:\n" + ragContext;
+        }
+        messages.add(Map.of("role", "system", "content", systemPrompt));
+        
+        // Add instruction for auto-response
+        String autoResponseInstruction = String.format("""
+            Recent chat activity:
+            ---
+            %s
+            ---
+            
+            If someone in this chat needs help with Minecraft or server issues, respond helpfully and directly.
+            If there's a conflict to mediate, help resolve it calmly.
+            For casual conversation, you may join naturally (%.0f%% chance).
+            If no response is needed, reply with nothing or just say you have nothing to add.
+            """, chatLog.toString(), conversationJoinChance * 100);
+        
+        messages.add(Map.of("role", "user", "content", autoResponseInstruction));
+        
+        // Make AI call using the same method as direct messages
+        makeAiCallWithHistory(messages)
                 .thenAccept(response -> {
                     if (response != null && !response.trim().isEmpty()) {
                         String cleaned = cleanResponse(response);
                         
-                        if (!cleaned.isEmpty() && !cleaned.equalsIgnoreCase("NO_RESPONSE")) {
+                        // Check if it's actually a response (not "nothing to add" or similar)
+                        if (!cleaned.isEmpty() && 
+                            !cleaned.toLowerCase().contains("nothing to add") &&
+                            !cleaned.toLowerCase().contains("no response") &&
+                            !cleaned.toLowerCase().startsWith("i have nothing")) {
+                            
                             Bukkit.getScheduler().runTask(plugin, () -> {
                                 broadcastResponse(cleaned);
                                 logMessage(name, cleaned, "proactive");
@@ -939,6 +946,12 @@ public class ServerAI implements Listener {
             return ""; // Still thinking, no response
         }
 
+        // Strip XML response tags
+        cleaned = cleaned.replaceAll("(?s)<response>.*?</response>", "").trim();
+        cleaned = cleaned.replaceAll("(?s)</?response>", "").trim();
+        cleaned = cleaned.replaceAll("(?s)<output>.*?</output>", "").trim();
+        cleaned = cleaned.replaceAll("(?s)</?output>", "").trim();
+
         // Remove common AI analysis patterns at the beginning
         String[] patternsToRemove = {
             "(?i)^Based on the (analysis|chat|conversation).*?[,:]\\s*",
@@ -949,11 +962,35 @@ public class ServerAI implements Listener {
             "(?i)^(Therefore|So|Thus),?\\s*(I will respond:?|my response:?)\\s*",
             "(?i)^Here'?s? my response:?\\s*",
             "(?i)^Response:?\\s*",
+            "(?i)^RESPONSE:\\s*",
             "(?i)^" + name + ":?\\s*",
         };
 
         for (String pattern : patternsToRemove) {
             cleaned = cleaned.replaceAll(pattern, "");
+        }
+
+        // Special handling for RESPONSE: format - extract just the response content
+        if (cleaned.contains("RESPONSE:")) {
+            int responseIndex = cleaned.indexOf("RESPONSE:");
+            String afterResponse = cleaned.substring(responseIndex + 9).trim(); // 9 = length of "RESPONSE:"
+            
+            // Find the end of the actual response (before any additional analysis)
+            String[] possibleEnds = {"\nI'm giving", "\nAnalysis:", "\nResponse:", "\nHere is", "\nI will", "\nThe user"};
+            int earliestEnd = afterResponse.length();
+            
+            for (String endMarker : possibleEnds) {
+                int endIndex = afterResponse.indexOf(endMarker);
+                if (endIndex != -1 && endIndex < earliestEnd) {
+                    earliestEnd = endIndex;
+                }
+            }
+            
+            if (earliestEnd < afterResponse.length()) {
+                cleaned = afterResponse.substring(0, earliestEnd).trim();
+            } else {
+                cleaned = afterResponse;
+            }
         }
 
         // For multi-line responses, if the response seems to contain analysis followed by actual response,
@@ -997,92 +1034,6 @@ public class ServerAI implements Listener {
         }
 
         return cleaned.trim();
-    }
-    
-    /**
-     * Make an AI API call
-     */
-    private CompletableFuture<String> makeAiCall(String systemPromptText, String userMessage) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                var config = plugin.getConfig();
-                int timeout = config.getInt("ai.timeout-seconds", 30) * 1000;
-                
-                // Build request - use instance serverUrl and model
-                Map<String, Object> message1 = Map.of("role", "system", "content", systemPromptText);
-                Map<String, Object> message2 = Map.of("role", "user", "content", userMessage);
-                Map<String, Object> requestBody = Map.of(
-                        "model", model,
-                        "messages", List.of(message1, message2),
-                        "temperature", config.getDouble("ai.temperature", 0.7),
-                        "top_p", config.getDouble("ai.top-p", 0.9),
-                        "top_k", config.getInt("ai.top-k", 50),
-                        "max_tokens", maxTokens
-                );
-                
-                String jsonBody = gson.toJson(requestBody);
-                String fullUrl = serverUrl + "/v1/chat/completions";
-                
-                if (debugMode) {
-                    plugin.getLogger().info("[ServerAI] Debug: POST " + fullUrl);
-                }
-                
-                java.net.URL url = new java.net.URL(fullUrl);
-                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setConnectTimeout(timeout);
-                conn.setReadTimeout(timeout);
-                conn.setDoOutput(true);
-                
-                try (java.io.OutputStream os = conn.getOutputStream()) {
-                    os.write(jsonBody.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-                }
-                
-                int statusCode = conn.getResponseCode();
-                
-                java.io.InputStream is = (statusCode >= 200 && statusCode < 300)
-                        ? conn.getInputStream()
-                        : conn.getErrorStream();
-                
-                String responseBody;
-                try (java.io.BufferedReader br = new java.io.BufferedReader(
-                        new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8))) {
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line);
-                    }
-                    responseBody = sb.toString();
-                }
-                
-                if (statusCode >= 200 && statusCode < 300) {
-                    JsonObject jsonResponse = gson.fromJson(responseBody, JsonObject.class);
-                    if (jsonResponse.has("choices") && jsonResponse.getAsJsonArray("choices").size() > 0) {
-                        JsonObject choice = jsonResponse.getAsJsonArray("choices").get(0).getAsJsonObject();
-                        if (choice.has("message") && choice.getAsJsonObject("message").has("content")) {
-                            String content = choice.getAsJsonObject("message").get("content").getAsString().trim();
-                            
-                            // Clean the response (strips thinking tags and analysis text)
-                            content = cleanResponse(content);
-                            
-                            if (content.isEmpty()) {
-                                return null;
-                            }
-                            
-                            return content;
-                        }
-                    }
-                } else {
-                    if (debugMode) plugin.getLogger().warning("[ServerAI] Debug: API returned " + statusCode);
-                }
-                
-                return null;
-            } catch (Exception e) {
-                if (debugMode) plugin.getLogger().warning("[ServerAI] AI call error: " + e.getMessage());
-                return null;
-            }
-        });
     }
     
     /**
