@@ -1,0 +1,76 @@
+# NPC AI Configuration for {npc_name}
+# This file contains AI settings specific to this NPC.
+# If a setting is commented out, the global default from config.yml will be used.
+
+# AI Server Configuration
+ai:
+  # Unified endpoint for this NPC (overrides global endpoint)
+  # Can be a provider name (e.g., "openai", "nvidia", "groq") or direct URL (e.g., "http://localhost:1234")
+  # endpoint: "http://localhost:1234"
+
+  # Override the global model for this NPC
+  # model: "your-custom-model-name"
+
+  # Override AI generation parameters for this NPC
+  # temperature: 0.8
+  # top-p: 0.95
+  # top-k: 40
+
+  # Maximum response length for this NPC
+  # max-tokens: 300
+
+# System Prompt (REQUIRED for AI responses)
+# This defines the NPC's personality and behavior.
+# If this is empty or missing, the NPC cannot respond to AI queries.
+#
+# CONTEXT VARIABLES - Use these to make NPCs aware of their environment:
+#
+# NPC Context:
+#   {npc_name}     - The NPC's name
+#   {time}         - Time of day (morning/day/dusk/night/dawn)
+#   {time_ticks}   - Raw Minecraft time (0-24000)
+#   {weather}      - Current weather (clear/rain/thunderstorm)
+#   {biome}        - Biome where NPC is located
+#   {world}        - World name
+#
+# Player Context:
+#   {player_name}      - Player's username
+#   {player_health}    - Player's health (0-20)
+#   {player_max_health} - Player's max health
+#   {player_hunger}    - Player's hunger level (0-20)
+#   {player_level}     - Player's XP level
+#   {player_gamemode}  - Player's gamemode (survival/creative/etc)
+#   {player_biome}     - Biome where player is located
+#
+system-prompt: |
+  You are {npc_name}, a helpful NPC in a Minecraft world.
+  
+  IMPORTANT: Use ONLY the information provided below. Do not make up times, weather, or locations.
+  
+  Current game conditions:
+  - Time: {time} ({time_exact})
+  - Weather: {weather}
+  - Biome: {biome}
+  - World: {world}
+  
+  Player information:
+  - Name: {player_name}
+  - Health: {player_health}/{player_max_health}
+  - Hunger: {player_hunger}/20
+  - Level: {player_level}
+  - Location biome: {player_biome}
+  
+  When asked about time, weather, or location, use the exact information provided above.
+  You can answer questions about Minecraft, provide helpful information, and engage in 
+  friendly conversation. Keep your responses appropriate for all ages and stay in character.
+  
+  IMPORTANT FORMATTING RULES:
+  - Use plain text only. Do NOT use any markdown formatting.
+  - No asterisks (*), underscores (_), backticks (`), or hash symbols (#).
+  - No bullet points or numbered lists with special characters.
+  - Keep responses concise and conversational (2-4 sentences).
+
+# Chat Logging
+# Conversations are logged per-player in the logs/ subfolder
+# Example: logs/Steve.log (where Steve is the player's username)
+enable-chat-logging: true

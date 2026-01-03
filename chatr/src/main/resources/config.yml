@@ -3,3 +3,243 @@ chat-prefix: "&6[Chatr] "  # Gold prefix
 enable-message: "&2Chatr plugin has been enabled!"
 disable-message: "&6Chatr plugin has been disabled."
 enable-logging: true
+
+# Debug mode - shows detailed debug messages in console
+debug-mode: true
+
+# ============================================
+# SERVER AI CONFIGURATION
+# ============================================
+# The Server AI is a server-wide assistant that:
+# - Appears in the player list
+# - Responds when players mention its name in chat
+# - Periodically scans chat to help players, mediate conflicts, or join conversations
+# NOTE: ServerAI only supports OpenAI-compatible APIs (LM Studio, OpenAI, Groq, Mistral, NVIDIA, OpenRouter)
+#       Gemini provider is NOT compatible with ServerAI - use only with individual NPCs
+server-ai:
+  # Enable/disable the Server AI
+  enabled: false
+  
+  # The name of the Server AI (used for chat mentions and display)
+  name: "Heimdall"
+  
+  # Skin for the ServerAI (player name whose skin to use in tab list)
+  # Leave empty for default Steve/Alex skin
+  # NOTE: This feature is not working yet and will be revisited later
+  skin: ""
+  
+  # Chat display configuration
+  display:
+    # Whether to show a prefix before the AI's name in chat (e.g., "[AI] Heimdall")
+    show-prefix: true
+    
+    # Text to show in the prefix (default: "AI")
+    prefix-text: "AI"
+    
+    # Color for the prefix (Minecraft color codes: &0-&f, &l=bold, &o=italic, etc.)
+    # Common colors: &6=gold, &a=green, &b=aqua, &c=red, &d=pink, &e=yellow
+    prefix-color: "&6"
+    
+    # Color for the AI's name in chat
+    name-color: "&a"
+  
+  # AI Server Configuration (ServerAI has its own defaults for reliability)
+  # These override the global ai.* settings to ensure ServerAI works independently
+  # Modify these if you want ServerAI to use different settings than global defaults
+  server-url: "http://localhost:1234"  # Default: LM Studio local server
+  model: "local-model"                 # Default model name (change to your loaded model)
+  
+  # How often (in seconds) the AI scans chat history to proactively help
+  chat-scan-interval-seconds: 60
+  
+  # Chance (0.0-1.0) that the AI will randomly join a conversation during each scan
+  # Set to 0 to disable random conversation joining
+  conversation-join-chance: 0.1
+  
+  # Maximum number of chat messages to keep in memory for scanning
+  max-chat-history: 25
+  
+  # Maximum tokens for Server AI responses (increase for thinking models)
+  max-tokens: 2000
+  
+  # Maximum conversation memory per player (for contextual responses)
+  # Higher values = better memory but more tokens used per request
+  max-conversation-memory: 10
+  
+  # RAG (Retrieval-Augmented Generation) configuration
+  # Enable RAG to provide accurate Minecraft knowledge from a knowledge base
+  rag:
+    enabled: false
+    dataPath: "ragData"        # Relative to plugin data folder
+    embeddingModel: "nomic-ai/nomic-embed-text-v1.5"
+    lmStudioUrl: "http://localhost:1234"  # LM Studio server URL
+    maxContextLength: 2000
+    topK: 5                    # Number of documents to retrieve initially
+    maxHops: 1                 # Graph expansion depth (1 hop with reranking)
+    similarityThreshold: 0.5   # Minimum similarity for graph expansion (0.0-1.0)
+    maxTotalDocs: 15           # Maximum total documents after expansion
+    maxContextDocs: 5          # Maximum documents to include in final context
+    snippetWindow: 600         # Characters around matched phrase for snippets
+    fallbackPrefixLen: 800     # Characters to include if no phrase match found
+  
+  # System Prompt Configuration
+  # Option 1: Define prompt inline (for short prompts)
+  # Option 2: Set to "file" to load from plugins/Chatr/serverAI/system-prompt.txt
+  system-prompt-source: "inline"  # "inline" or "file"
+  
+  # System prompt (used when system-prompt-source is "inline")
+  # Available variables: {name}, {server_time}, {player_time}, {player_name}, {player_biome}, {player_x}, {player_y}, {player_z}, {weather}
+  system-prompt: |
+    You are {name}, the Server AI assistant for this Minecraft server.
+    
+    AVAILABLE CONTEXT VARIABLES:
+    - {server_time}: Current server time in 24-hour format (e.g., "14:30")
+    - {player_time}: Player's personal time (ptime) in 24-hour format
+    - {player_name}: The player's name
+    - {player_biome}: The biome the player is currently in
+    - {player_x}: The player's X coordinate
+    - {player_y}: The player's Y coordinate
+    - {player_z}: The player's Z coordinate
+    - {weather}: Current weather conditions (clear/rain/thunderstorm)
+    
+    RESPONSE RULES:
+    - Respond ONLY with your message. No analysis, no thinking, no prefixes.
+    - Do NOT explain what you're doing or why.
+    - Do NOT start with "Based on..." or "I see that..." or similar.
+    - Do NOT include location, coordinates, biome, weather, or time information unless the player specifically asks for it.
+    - Only mention server context (time/weather) if it's directly relevant to the question.
+    - Keep responses focused on the player's query - don't add unsolicited information.
+    - Just respond naturally as if you're chatting.
+    - Use plain text only. No markdown formatting (no *, _, `, #).
+    - Keep responses concise: 1-3 sentences for simple questions, up to 4-5 for complex help.
+    - Provide complete answers - don't ask follow-up questions unless truly necessary.
+    
+    Your personality:
+    - Wise and calm, like an all-seeing guardian named after the Norse god
+    - Helpful and knowledgeable about Minecraft
+    - Friendly but professional
+    
+    Your responsibilities:
+    - Answer questions directly and helpfully
+    - If players need help with Minecraft (crafting, building, etc.), provide the full answer
+    - Mediate conflicts calmly if players argue
+    - Be a positive presence in the community
+
+# ============================================
+# NPC AI CONFIGURATION (Global Defaults)
+# ============================================
+# These are the default settings for all NPCs. Each NPC can override these in their individual config.
+ai:
+  # AI Endpoint - Either a provider name (nvidia, groq, etc.) OR a direct URL
+  # Provider names: nvidia, groq, gemini, mistral, openrouter
+  # Direct URLs: "http://localhost:1234" (LM Studio), "http://localhost:11434" (Ollama), etc.
+  endpoint: "http://localhost:1234"
+
+  # Default model name (must be loaded in your AI server)
+  model: "your-model-name-here"
+
+  # AI generation parameters
+  temperature: 0.6    # Controls randomness (0.0 = deterministic, 1.0 = very random)
+  top-p: 0.9         # Nucleus sampling parameter
+  top-k: 50          # Top-k sampling parameter
+
+  # Safety settings
+  # IMPORTANT: For "thinking" models (like Qwen3-thinking), increase max-tokens!
+  # Thinking models use tokens for internal reasoning before responding.
+  # Recommended: 800-1500 for thinking models, 300-500 for regular models.
+  max-tokens: 2000   # Maximum response length (increase for thinking models)
+  timeout-seconds: 30 # API call timeout
+
+  # ============================================
+  # SECURITY SETTINGS
+  # ============================================
+  # Control how API keys are loaded for security
+  # When true: Uses environment variables/system properties (recommended for production)
+  # When false: Uses api-keys section below (simpler for development)
+  use-environment-variables: false
+
+  # ============================================
+  # MULTI-PROVIDER API KEYS
+  # ============================================
+  # Set API keys for different providers. Leave empty to use default (local server).
+  # NPCs can specify which provider to use in their individual config.
+  # NOTE: Gemini provider is not compatible with ServerAI - only works with individual NPCs
+  # NOTE: These are only used when use-environment-variables: false
+  api-keys:
+    gemini: ""        # AIza... (NPCs only, not ServerAI)
+    groq: ""          # gsk_...
+    mistral: ""       # your mistral key
+    nvidia: ""        # nvapi-...
+    openrouter: ""    # sk-or-...
+
+# ============================================
+# CONVERSATION MEMORY
+# ============================================
+# Per-player, per-NPC conversation history
+conversation:
+  enabled: true
+  max-messages: 20           # Messages to keep per conversation
+  max-age-days: 7            # Clear conversations older than this
+  persistence-enabled: true  # Save to disk on shutdown/load on startup
+
+# ============================================
+# RATE LIMITING
+# ============================================
+# Prevent API abuse and manage costs
+rate-limit:
+  enabled: true
+  bypass-local: true         # Skip rate limiting for localhost/LAN AI servers
+  base-requests-per-minute: 10
+  cooldown-seconds: 3        # Minimum time between requests per player
+
+  # Permission-based tiers (player must have the permission to use that tier)
+  # tiers:
+  #   vip:
+  #     permission: "chatr.ratelimit.vip"
+  #     requests-per-minute: 20
+  #     cooldown-seconds: 1
+  #   premium:
+  #     permission: "chatr.ratelimit.premium"
+  #     requests-per-minute: 30
+  #     cooldown-seconds: 0
+  #   unlimited:
+  #     permission: "chatr.ratelimit.unlimited"
+  #     requests-per-minute: -1  # -1 = unlimited
+  #     cooldown-seconds: 0
+
+# ============================================
+# RESPONSE CACHING
+# ============================================
+# Cache identical requests to save API calls
+cache:
+  enabled: true
+  ttl-seconds: 300          # Cache lifetime (5 minutes)
+  max-size: 500             # Maximum cached responses
+
+# ============================================
+# METRICS & ANALYTICS
+# ============================================
+# Track API usage for monitoring and optimization
+metrics:
+  enabled: true
+  persist: true             # Save metrics to file daily
+
+# ============================================
+# CLICK-TO-CHAT
+# ============================================
+# Right-click an NPC to start a conversation
+click-to-chat:
+  enabled: true
+  interaction-distance: 5.0  # Max blocks from NPC to right-click
+  timeout-seconds: 30        # Seconds before chat mode expires
+  
+  # Message colors for NPC interaction
+  colors:
+    # Color for the NPC name in brackets (e.g., [NPC1])
+    npc-name: "&a"           # Default: light green
+    
+    # Color for the main instruction text
+    instruction: "&e"        # Default: yellow
+    
+    # Color for the cancel instruction
+    cancel: "&7"             # Default: gray
