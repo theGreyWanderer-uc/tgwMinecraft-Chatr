@@ -864,6 +864,20 @@ public class ServerAI implements Listener {
             chatLog.append(msg.sender).append(": ").append(msg.message).append("\n");
         }
         
+        // Get RAG context if enabled
+        String ragContext = "";
+        if (ragEnabled && ragSystem != null) {
+            try {
+                ragContext = ragSystem.retrieveContext(chatLog.toString());
+                if (debugMode && !ragContext.isEmpty()) {
+                    plugin.getLogger().info("[ServerAI] RAG context retrieved for chat scan: " + ragContext.substring(0, Math.min(100, ragContext.length())) + "...");
+                }
+            } catch (Exception e) {
+                plugin.getLogger().warning("[ServerAI] RAG context retrieval failed for chat scan: " + e.getMessage());
+                // Continue without RAG context
+            }
+        }
+        
         // Build a focused scan prompt - no analysis output, just respond or not
         String scanPrompt = String.format("""
             You are %s, the server AI. Review this recent chat and decide if you should respond.
@@ -873,6 +887,7 @@ public class ServerAI implements Listener {
             %s
             ---
             
+            %s
             Decide:
             - If someone needs help with Minecraft, provide the answer directly.
             - If there's a conflict, calmly mediate.
@@ -883,7 +898,9 @@ public class ServerAI implements Listener {
             If you choose NOT to respond, reply with exactly: NO_RESPONSE
             
             No explanations, no analysis - just your message or NO_RESPONSE.
-            """, name, chatLog.toString(), conversationJoinChance * 100);
+            """, name, chatLog.toString(), 
+               ragContext.isEmpty() ? "" : "Relevant knowledge from server documentation:\n" + ragContext + "\n\n",
+               conversationJoinChance * 100);
         
         makeAiCall(scanPrompt, "Analyze and respond if appropriate")
                 .thenAccept(response -> {
