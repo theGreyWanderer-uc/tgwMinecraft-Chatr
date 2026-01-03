@@ -365,6 +365,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Support
 
+- **Documentation**: [📖 Full Docs](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/)
 - **Issues**: [GitHub Issues](https://github.com/theGreyWanderer-uc/tgwMinecraft-Chatr/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/theGreyWanderer-uc/tgwMinecraft-Chatr/discussions)
 
