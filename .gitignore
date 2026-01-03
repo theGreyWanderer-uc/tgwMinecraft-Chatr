@@ -1,0 +1,13 @@
+# Virtual environment
+.venv/
+venv/
+
+# RAG data
+ragData/
+
+# Gradle build outputs
+build/
+.gradle/
+
+# IDE files
+.vscode/
