@@ -154,8 +154,8 @@ Common error messages and solutions:
 
 ## See Also
 
-- [[Permissions|Permission System]]
-- [[NPCs|NPC Management]]
-- [[Troubleshooting|Command Issues]]
+- [Permission System](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Permissions.html)
+- [NPC Management](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/NPCs.html)
+- [Command Issues](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Troubleshooting.html)
 
 

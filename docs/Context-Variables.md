@@ -155,7 +155,7 @@ ServerAI's default prompt instructs the model to:
 
 ## See Also
 
-- [[ServerAI|ServerAI Configuration]]
-- [[NPCs|NPC System Prompts]]
-- [[Configuration|Prompt Customization]]
-- [[Troubleshooting|Variable Issues]]
+- [ServerAI Configuration](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/ServerAI.html)
+- [NPC System Prompts](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/NPCs.html)
+- [Prompt Customization](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Configuration.html)
+- [Variable Issues](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Troubleshooting.html)

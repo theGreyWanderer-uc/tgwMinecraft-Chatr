@@ -174,7 +174,7 @@ The following variables can be used in system prompts. ServerAI and NPCs support
 - `{player_level}` - Player XP level
 - `{player_gamemode}` - Player game mode
 
-See the [[wiki Context-Variables page|wiki/Context-Variables.md]] for complete details.
+See the [Context-Variables page](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Context-Variables.html) for complete details.
 
 ### AI Providers
 Chatr supports multiple AI options:

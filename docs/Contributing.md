@@ -7,8 +7,6 @@ Guidelines for contributing to the Chatr project.
 ### Code Contributions
 - Bug fixes
 - New features
-- Performance improvements
-- Code refactoring
 
 ### Documentation
 - Wiki improvements
@@ -20,7 +18,6 @@ Guidelines for contributing to the Chatr project.
 - Bug reports
 - Feature testing
 - Compatibility testing
-- Performance benchmarking
 
 ### Community Support
 - Helping other users
@@ -211,20 +208,6 @@ Use the feature request template:
 - Be clear and concise
 - Provide context
 - Stay on topic
-
-## Recognition
-
-### Contributors
-All contributors are recognized:
-- GitHub contributor list
-- Changelog mentions
-- Special thanks in releases
-
-### Rewards
-- Early access to features
-- Recognition in documentation
-- Priority support
-- Community recognition
 
 ## Getting Help
 

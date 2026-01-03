@@ -32,7 +32,7 @@ Planned (but not yet implemented) API features include:
 
 ## See Also
 
-- [[Configuration|Configuration Guide]]
-- [[Commands|Command Reference]]
-- [[Contributing|Contributing Guide]]
+- [Configuration Guide](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Configuration.html)
+- [Command Reference](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Commands.html)
+- [Contributing Guide](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Contributing.html)
 - [GitHub Repository](https://github.com/theGreyWanderer-uc/tgwMinecraft-Chatr)

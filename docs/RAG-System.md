@@ -176,7 +176,7 @@ Planned improvements:
 
 ## See Also
 
-- [[Configuration|RAG Configuration]]
-- [[API-Providers|AI Provider Setup]]
-- [[ServerAI|ServerAI Integration]]
-- [[Troubleshooting|RAG Issues]]
+- [RAG Configuration](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Configuration.html)
+- [AI Provider Setup](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/API-Providers.html)
+- [ServerAI Integration](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/ServerAI.html)
+- [RAG Issues](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Troubleshooting.html)

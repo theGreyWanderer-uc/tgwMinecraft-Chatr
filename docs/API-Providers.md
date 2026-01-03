@@ -321,6 +321,6 @@ rate-limit:
 
 ## See Also
 
-- [[Configuration|Provider Configuration]]
-- [[NPCs|NPC-Specific Providers]]
-- [[Troubleshooting|Provider Issues]]
+- [Provider Configuration](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Configuration.html)
+- [NPC-Specific Providers](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/NPCs.html)
+- [Provider Issues](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Troubleshooting.html)

@@ -30,7 +30,7 @@ Common issues:
 3. Add the configuration to `config.yml`
 4. Restart the server
 
-See [[API-Providers|AI Provider Setup]] for detailed instructions.
+See [AI Provider Setup](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/API-Providers.html) for detailed instructions.
 
 ### Can I use multiple AI providers?
 Yes! Configure multiple providers and set a default. You can also specify different providers for different NPCs.
@@ -110,7 +110,7 @@ Basic permissions:
 - `chatr.create`, `chatr.remove`, `chatr.skin`, `chatr.color`, `chatr.reload`, `chatr.admin` – admin features
 
 ### How do I set up permissions?
-Use your permission plugin (LuckPerms, PermissionsEx, etc.) to grant permissions. See [[Permissions|Permission Guide]] for details.
+Use your permission plugin (LuckPerms, PermissionsEx, etc.) to grant permissions. See [Permission Guide](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Permissions.html) for details.
 
 ### Why do players get "no permission" errors?
 - Permission not granted
@@ -180,10 +180,10 @@ Yes. Use your normal server backup process to back up the `plugins/Chatr/` folde
 ## Development
 
 ### Can I contribute to Chatr?
-Yes! Chatr is open source. See [[Contributing|Contributing Guide]] for details.
+Yes! Chatr is open source. See [Contributing Guide](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Contributing.html) for details.
 
 ### Is there an API for developers?
-At the moment there is no stable public API beyond accessing the plugin instance via the Bukkit API. The [[API-Reference|API Reference]] page documents planned functionality rather than the current code.
+At the moment there is no stable public API beyond accessing the plugin instance via the Bukkit API. The [API Reference](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/API-Reference.html) page documents planned functionality rather than the current code.
 
 ### How do I report bugs?
 Use GitHub Issues with:

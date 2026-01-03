@@ -176,7 +176,7 @@ server-ai:
     maxContextLength: 2000
 ```
 
-**Note**: RAG requires LM Studio with the nomic-ai embedding model. See [[RAG-System]] for setup details.
+**Note**: RAG requires LM Studio with the nomic-ai embedding model. See [RAG-System](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/RAG-System.html) for setup details.
 
 ## Rate Limiting
 
@@ -255,6 +255,6 @@ Chatr creates these configuration files:
 
 ## See Also
 
-- [[API-Providers|AI Provider Setup]]
-- [[Context-Variables|Available Variables]]
-- [[Troubleshooting|Configuration Issues]]
+- [AI Provider Setup](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/API-Providers.html)
+- [Available Variables](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Context-Variables.html)
+- [Configuration Issues](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Troubleshooting.html)
