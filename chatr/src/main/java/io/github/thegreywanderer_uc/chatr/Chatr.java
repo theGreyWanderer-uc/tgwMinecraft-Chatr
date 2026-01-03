@@ -885,7 +885,8 @@ public final class Chatr extends JavaPlugin implements CommandExecutor, Listener
                         DirectNpc npc = npcs.get(npcId);
                         if (npc != null) {
                             if (skin != null && !skin.isEmpty()) {
-                                setNpcSkin(npcId, skin);
+                                npcSkins.put(npcId, skin);
+                                npc.setSkin(skin);
                             }
                             // Load color configuration
                             npc.setNpcNameColor(section.getString("colors.npc-name"));
