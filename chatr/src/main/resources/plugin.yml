@@ -1,7 +1,7 @@
 name: Chatr
-version: '1.0-SNAPSHOT'
+version: '1.0.0'
 main: io.github.thegreywanderer_uc.chatr.Chatr
-api-version: '1.21.10'
+api-version: '1.21'
 commands:
   chatr:
     description: Main command for Chatr plugin.
@@ -22,4 +22,7 @@ permissions:
     default: op
   chatr.skin:
     description: Allows setting NPC skins.
+    default: op
+  chatr.color:
+    description: Allows setting NPC interaction message colors.
     default: op
