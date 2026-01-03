@@ -4,22 +4,22 @@ Welcome to the Chatr plugin wiki! Chatr brings AI-powered NPCs and a server-wide
 
 ## Quick Start
 
-- [[Installation|Getting Started]] - Install and setup Chatr
-- [[Configuration|Basic Configuration]] - Configure your AI providers
-- [[NPCs|Create Your First NPC]] - Add AI-powered NPCs to your world
-- [[ServerAI|Enable Server AI]] - Set up the server-wide assistant
+- [Getting Started](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Installation.html) - Install and setup Chatr
+- [Basic Configuration](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Configuration.html) - Configure your AI providers
+- [Create Your First NPC](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/NPCs.html) - Add AI-powered NPCs to your world
+- [Enable Server AI](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/ServerAI.html) - Set up the server-wide assistant
 
 ## User Guide
 
-- [[Commands|Command Reference]] - All available commands
-- [[Permissions|Permission System]] - User permissions and access control
-- [[Context-Variables|Context Variables]] - Dynamic variables for customization
-- [[API-Providers|AI Providers]] - Supported AI services and setup
+- [Command Reference](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Commands.html) - All available commands
+- [Permission System](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Permissions.html) - User permissions and access control
+- [Context Variables](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Context-Variables.html) - Dynamic variables for customization
+- [AI Providers](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/API-Providers.html) - Supported AI services and setup
 
 ## Advanced Features
 
-- [[RAG-System|RAG Knowledge Base]] - Accurate Minecraft information
-- [[Troubleshooting|Problem Solving]] - Common issues and solutions
+- [RAG Knowledge Base](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/RAG-System.html) - Accurate Minecraft information
+- [Problem Solving](https://thegreywanderer-uc.github.io/tgwMinecraft-Chatr/Troubleshooting.html) - Common issues and solutions
 
 ## Links
 
