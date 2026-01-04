@@ -43,7 +43,7 @@ jobs:
           -F "version_number=${{ env.VERSION }}" \
           -F "name=Chatr ${{ env.VERSION }}" \
           -F "changelog=${{ github.event.head_commit.message }}" \
-          -F "files=@chatr/build/libs/Chatr-${{ env.VERSION }}.jar" \
+          -F "files=@chatr/build/libs/chatr-${{ env.VERSION }}-reobf.jar" \
           -F 'loaders=["paper"]' \
           -F 'game_versions=["1.21.1"]' \
           -F "version_type=release"
