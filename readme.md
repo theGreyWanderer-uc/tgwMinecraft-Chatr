@@ -2,6 +2,9 @@
 
 Chatr is a sophisticated Minecraft AI plugin and NPC chat bot that brings intelligent conversational NPCs and a server-wide AI assistant to your Spigot/Paper server. Create AI-powered NPCs that can converse with players, answer questions, and provide helpful information about Minecraft. Features a server-wide AI assistant that monitors chat and helps players proactively.
 
+## Links
+- [Modrinth](https://modrinth.com/project/chatr)
+
 ## Table of Contents
 
 - [Features](#features)
@@ -16,6 +19,7 @@ Chatr is a sophisticated Minecraft AI plugin and NPC chat bot that brings intell
 - [Permissions](#permissions)
 - [API Usage & Costs](#api-usage--costs)
 - [Troubleshooting](#troubleshooting)
+- [Donations](#donations)
 - [License](#license)
 - [Support](#support)
 - [Changelog](#changelog)
@@ -24,7 +28,7 @@ Chatr is a sophisticated Minecraft AI plugin and NPC chat bot that brings intell
 
 ### 🤖 AI-Powered NPCs
 - Create NPCs with individual personalities and AI configurations
-- Support for multiple AI providers (Groq, Mistral, NVIDIA, OpenRouter)
+- Support for multiple AI providers (Groq, Mistral, NVIDIA, OpenRouter, Gemini)
 - Context-aware conversations with memory
 - Click-to-chat functionality
 - Customizable NPC skins and display names
@@ -356,6 +360,13 @@ Enable debug logging in `config.yml`:
 ```yaml
 debug-mode: true
 ```
+
+## Donations
+
+Consuming caffeine to output semi-usable product.
+
+- [Ko-fi](https://ko-fi.com/thegreywanderer)
+- [Buy Me a Coffee](https://buymeacoffee.com/theGreyWanderer)
 
 ## License
 
