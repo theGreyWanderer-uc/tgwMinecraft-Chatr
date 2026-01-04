@@ -44,10 +44,10 @@ jobs:
         name: Chatr ${{ env.VERSION }}
         changelog: ${{ github.event.head_commit.message }}
         files: chatr/build/libs/*.jar
-        loaders:
-          - "paper"
-        game_versions:
-          - "1.21.1"
+        loaders: |
+          - paper
+        game_versions: |
+          - 1.21.1
         version_type: release
 
     - name: Create Release
