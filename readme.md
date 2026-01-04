@@ -2,6 +2,9 @@
 
 Chatr is a sophisticated Minecraft AI plugin and NPC chat bot that brings intelligent conversational NPCs and a server-wide AI assistant to your Spigot/Paper server. Create AI-powered NPCs that can converse with players, answer questions, and provide helpful information about Minecraft. Features a server-wide AI assistant that monitors chat and helps players proactively.
 
+## Links
+- [Modrinth](https://modrinth.com/project/chatr)
+
 ## Table of Contents
 
 - [Features](#features)
@@ -16,6 +19,7 @@ Chatr is a sophisticated Minecraft AI plugin and NPC chat bot that brings intell
 - [Permissions](#permissions)
 - [API Usage & Costs](#api-usage--costs)
 - [Troubleshooting](#troubleshooting)
+- [Donations](#donations)
 - [License](#license)
 - [Support](#support)
 - [Changelog](#changelog)
@@ -24,7 +28,7 @@ Chatr is a sophisticated Minecraft AI plugin and NPC chat bot that brings intell
 
 ### 🤖 AI-Powered NPCs
 - Create NPCs with individual personalities and AI configurations
-- Support for multiple AI providers (Groq, Mistral, NVIDIA, OpenRouter)
+- Support for multiple AI providers (Groq, Mistral, NVIDIA, OpenRouter, Gemini)
 - Context-aware conversations with memory
 - Click-to-chat functionality
 - Customizable NPC skins and display names
@@ -45,7 +49,6 @@ Chatr is a sophisticated Minecraft AI plugin and NPC chat bot that brings intell
 - **Metrics & Analytics**: Track API usage and performance
 
 ### 🔧 Technical Features
-- ProtocolLib integration for click-to-chat
 - Gson for JSON processing
 - Comprehensive logging and debug modes
 - YAML configuration with extensive customization options
@@ -60,9 +63,8 @@ Chatr is a sophisticated Minecraft AI plugin and NPC chat bot that brings intell
 
 ### Dependencies
 - **Required**: Spigot/Paper 1.20+ (tested on 1.21) - Java Edition only
-- **Required**: ProtocolLib (for click-to-chat feature)
 - **Required**: AI server or API keys (LM Studio default port 1234, Ollama port 11434, or cloud provider API keys)
-- **Optional**: For RAG system - Download `ragData.zip` from the repository's `ragData/` folder, unzip into `plugins/Chatr/` as `ragData/` folder, and configure in `config.yml`
+- **Optional**: For RAG system - Download `ragData.zip` from releases, unzip into `plugins/Chatr/` as `ragData/` folder, and configure in `config.yml`
 
 ## Quick Start
 
@@ -358,6 +360,13 @@ Enable debug logging in `config.yml`:
 ```yaml
 debug-mode: true
 ```
+
+## Donations
+
+Consuming caffeine to output semi-usable product.
+
+- [Ko-fi](https://ko-fi.com/thegreywanderer)
+- [Buy Me a Coffee](https://buymeacoffee.com/theGreyWanderer)
 
 ## License
 

@@ -15,7 +15,7 @@ This summarizes the initial 1.0.0 release as implemented in this repo. For the c
 - Multi-provider AI support (LM Studio/Ollama via OpenAI-compatible endpoints, plus Groq, Mistral, NVIDIA, OpenRouter, Gemini for NPCs)
 - RAG (Retrieval-Augmented Generation) system for accurate Minecraft knowledge used by ServerAI
 - Context-aware conversations with persistent memory
-- Click-to-chat functionality using ProtocolLib
+- Click-to-chat functionality
 - Rate limiting and response caching
 - Metrics and statistics for API usage
 - YAML-based configuration system (`config.yml`, `npcs.yml`, per-NPC configs)

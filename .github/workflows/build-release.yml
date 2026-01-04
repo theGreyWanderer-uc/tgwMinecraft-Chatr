@@ -28,11 +28,23 @@ jobs:
         VERSION=$(grep '^version =' chatr/build.gradle.kts | sed 's/version = "\(.*\)"/\1/')
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-    - name: Upload JAR as artifact
+    - name: Upload JAR artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Chatr-JAR
-        path: chatr/build/libs/*.jar
+        name: chatr-${{ env.VERSION }}.jar
+        path: chatr/build/libs/chatr-${{ env.VERSION }}.jar
+
+    - name: Upload reobf JAR artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: chatr-${{ env.VERSION }}-reobf.jar
+        path: chatr/build/libs/chatr-${{ env.VERSION }}-reobf.jar
+
+    - name: Upload RAG data artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ragData.zip
+        path: ragData/ragData.zip
 
     - name: Publish to Modrinth
       if: github.ref == 'refs/heads/main'
@@ -52,7 +64,9 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/v')
       uses: softprops/action-gh-release@v2
       with:
-        files: chatr/build/libs/*.jar
+        files: |
+          chatr/build/libs/*.jar
+          ragData/ragData.zip
         generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

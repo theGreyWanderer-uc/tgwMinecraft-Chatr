@@ -21,7 +21,6 @@ The plugin itself is free and open source. However, using AI providers may incur
 ### Why won't the plugin load?
 Common issues:
 - **Java Version**: Ensure Java 21 is installed
-- **Dependencies**: Install ProtocolLib
 - **Server Type**: Must be Spigot or Paper, not vanilla Minecraft
 
 ### How do I configure AI providers?
@@ -41,7 +40,7 @@ Yes! Configure multiple providers and set a default. You can also specify differ
 NPCs are interactive entities that players can click to start conversations. They remember conversation history and use AI to respond naturally.
 
 ### Why can't players interact with NPCs?
-Ensure ProtocolLib is properly installed and click-to-chat is enabled in `config.yml`. Players need the `chatr.ai` permission to chat with NPCs.
+Ensure click-to-chat is enabled in `config.yml`. Players need the `chatr.ai` permission to chat with NPCs.
 
 ### Do NPCs persist through restarts?
 Yes, NPC data is saved automatically. NPCs will respawn at their configured locations when the server restarts.
