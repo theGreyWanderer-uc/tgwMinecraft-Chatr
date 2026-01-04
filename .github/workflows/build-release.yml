@@ -32,7 +32,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Chatr-JAR
-        path: chatr/build/libs/*.jar
+        path: |
+          chatr/build/libs/*.jar
+          chatr/ragData/ragData.zip
 
     - name: Publish to Modrinth
       if: github.ref == 'refs/heads/main'
@@ -52,7 +54,9 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/v')
       uses: softprops/action-gh-release@v2
       with:
-        files: chatr/build/libs/*.jar
+        files: |
+          chatr/build/libs/*.jar
+          chatr/ragData/ragData.zip
         generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
