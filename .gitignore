@@ -1,9 +1,9 @@
-# Virtual environment
-.venv/
-venv/
+# Virtual environment (remove if no Python)
+# .venv/
+# venv/
 
 # RAG data
-ragData/
+# ragData/  # Temporarily removed to include ragData.zip
 
 # Gradle build outputs
 build/
@@ -11,3 +11,25 @@ build/
 
 # IDE files
 .vscode/
+.idea/
+*.iml
+out/
+.settings/
+.classpath
+.project
+bin/
+
+# Logs and temp files
+*.log
+*.tmp
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Environment and secrets
+.env
+secrets/
+
+# Copilot instructions
+.github/copilot-instructions.md
