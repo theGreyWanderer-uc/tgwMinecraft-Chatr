@@ -36,7 +36,7 @@ jobs:
 
     - name: Publish to Modrinth
       if: github.ref == 'refs/heads/main'
-      uses: modrinth/action@v1
+      uses: modrinth/action@main
       with:
         token: ${{ secrets.MODRINTH_TOKEN }}
         project_id: 1AEV6tyB
