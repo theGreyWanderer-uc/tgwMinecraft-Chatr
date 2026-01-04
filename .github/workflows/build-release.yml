@@ -28,13 +28,17 @@ jobs:
         VERSION=$(grep '^version =' chatr/build.gradle.kts | sed 's/version = "\(.*\)"/\1/')
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
+    - name: Prepare files for artifact
+      run: |
+        mkdir -p temp
+        cp chatr/build/libs/*.jar temp/
+        cp ragData/ragData.zip temp/
+
     - name: Upload JAR as artifact
       uses: actions/upload-artifact@v4
       with:
         name: Chatr-JAR
-        path: |
-          chatr/build/libs/*.jar
-          ragData/ragData.zip
+        path: temp/*
 
     - name: Publish to Modrinth
       if: github.ref == 'refs/heads/main'
