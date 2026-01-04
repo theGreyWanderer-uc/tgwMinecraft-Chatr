@@ -96,7 +96,7 @@ server-ai:
 
 ## Context Variables
 
-ServerAI supports the same [[Context-Variables|context variables]] as NPCs:
+ServerAI supports the same [context variables](Context-Variables.md) as NPCs:
 
 - `{name}` - AI's name
 - `{server_time}` - Current server time
@@ -164,7 +164,7 @@ Then create `plugins/Chatr/serverAI/system-prompt.txt` with your custom prompt.
 
 ## See Also
 
-- [[Configuration|ServerAI Configuration]]
-- [[Context-Variables|Available Variables]]
-- [[API-Providers|AI Provider Setup]]
-- [[Troubleshooting|Common Issues]]
+- [ServerAI Configuration](Configuration.md)
+- [Available Variables](Context-Variables.md)
+- [AI Provider Setup](API-Providers.md)
+- [Common Issues](Troubleshooting.md)

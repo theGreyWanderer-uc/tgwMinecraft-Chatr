@@ -10,7 +10,6 @@ Before installing Chatr, ensure your server meets these requirements:
 - **Server Software**: Spigot or Paper (Java Edition only)
 - **Java Version**: Java 21 or higher
 - **Dependencies**:
-  - ProtocolLib (required for click-to-chat feature)
   - AI server or API keys (LM Studio, Ollama, Groq, Mistral, NVIDIA, OpenRouter, Gemini for NPCs)
 
 ## Download
@@ -21,15 +20,7 @@ Before installing Chatr, ensure your server meets these requirements:
 
 ## Installation Steps
 
-### Step 1: Install Dependencies
-
-First, install the required plugins:
-
-1. Download ProtocolLib from [SpigotMC](https://www.spigotmc.org/resources/protocollib.1997/)
-2. Place `ProtocolLib.jar` in your `plugins/` directory
-3. Restart your server to generate ProtocolLib's configuration
-
-### Step 2: Install Chatr
+### Step 1: Install Chatr
 
 1. Place `Chatr-1.0.0.jar` in your `plugins/` directory
 2. **Important**: Perform a full server restart (not just `/reload`)
@@ -46,7 +37,7 @@ If you see this message, Chatr is successfully installed.
 
 ## Initial Configuration
 
-After installation, you'll need to configure at least one AI provider. See [[Configuration]] for detailed setup instructions.
+After installation, you'll need to configure at least one AI provider. See [Configuration](Configuration.md) for detailed setup instructions.
 
 ## Common Installation Issues
 
@@ -66,6 +57,6 @@ After installation, you'll need to configure at least one AI provider. See [[Con
 ## Next Steps
 
 Once installed, proceed to:
-1. [[Configuration|Configure your AI provider]]
-2. [[NPCs|Create your first NPC]]
-3. [[ServerAI|Set up the server assistant]] (optional)
+1. [Configure your AI provider](Configuration.md)
+2. [Create your first NPC](NPCs.md)
+3. [Set up the server assistant](ServerAI.md) (optional)

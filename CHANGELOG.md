@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multi-provider AI support (Groq, Mistral, NVIDIA, OpenRouter, Gemini)
 - RAG (Retrieval-Augmented Generation) system for accurate Minecraft knowledge
 - Context-aware conversations with persistent memory
-- Click-to-chat functionality using ProtocolLib
+- Click-to-chat functionality
 - Comprehensive rate limiting and response caching
 - API usage metrics and analytics
 - YAML-based configuration system
@@ -48,7 +48,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 - Spigot/Paper 1.20+ compatibility
-- ProtocolLib for advanced features
 - Support for local AI servers (LM Studio, Ollama) and cloud providers
 
 ---

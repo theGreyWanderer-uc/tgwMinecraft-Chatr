@@ -16,7 +16,6 @@ Common issues and solutions for the Chatr plugin.
 **Error**: Plugin fails to enable with dependency errors
 
 **Solution**:
-- Install required plugins: ProtocolLib
 - Ensure compatible versions
 - Check server logs for specific errors
 
@@ -272,7 +271,7 @@ When reporting issues:
 
 ## See Also
 
-- [[Installation|Installation Guide]]
-- [[Configuration|Configuration Details]]
-- [[Commands|Command Reference]]
-- [[API-Providers|AI Provider Setup]]
+- [Installation Guide](Installation.md)
+- [Configuration Details](Configuration.md)
+- [Command Reference](Commands.md)
+- [AI Provider Setup](API-Providers.md)

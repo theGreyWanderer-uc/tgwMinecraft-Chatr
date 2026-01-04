@@ -45,7 +45,6 @@ Chatr is a sophisticated Minecraft AI plugin and NPC chat bot that brings intell
 - **Metrics & Analytics**: Track API usage and performance
 
 ### 🔧 Technical Features
-- ProtocolLib integration for click-to-chat
 - Gson for JSON processing
 - Comprehensive logging and debug modes
 - YAML configuration with extensive customization options
@@ -60,9 +59,8 @@ Chatr is a sophisticated Minecraft AI plugin and NPC chat bot that brings intell
 
 ### Dependencies
 - **Required**: Spigot/Paper 1.20+ (tested on 1.21) - Java Edition only
-- **Required**: ProtocolLib (for click-to-chat feature)
 - **Required**: AI server or API keys (LM Studio default port 1234, Ollama port 11434, or cloud provider API keys)
-- **Optional**: For RAG system - Download `ragData.zip` from the repository's `ragData/` folder, unzip into `plugins/Chatr/` as `ragData/` folder, and configure in `config.yml`
+- **Optional**: For RAG system - Download `ragData.zip` from releases, unzip into `plugins/Chatr/` as `ragData/` folder, and configure in `config.yml`
 
 ## Quick Start
 
