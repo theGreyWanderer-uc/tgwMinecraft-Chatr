@@ -24,10 +24,9 @@ jobs:
       run: ./gradlew clean build reobfJar
 
     - name: Extract version from build.gradle.kts
-      shell: pwsh
       run: |
-        $version = Select-String -Path chatr/build.gradle.kts -Pattern '^version = "(.*)"' | ForEach-Object { $_.Matches.Groups[1].Value }
-        echo "VERSION=$version" >> $env:GITHUB_ENV
+        VERSION=$(grep '^version =' chatr/build.gradle.kts | sed 's/version = "\(.*\)"/\1/')
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
 
     - name: Upload JAR as artifact
       uses: actions/upload-artifact@v4
