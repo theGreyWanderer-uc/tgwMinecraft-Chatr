@@ -22,7 +22,6 @@ repositories {
 dependencies {
     paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
 
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
     implementation("com.google.code.gson:gson:2.11.0")
     compileOnly("org.jetbrains:annotations:24.1.0")
 
