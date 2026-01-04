@@ -46,9 +46,9 @@ jobs:
         changelog: ${{ github.event.head_commit.message }}
         files: chatr/build/libs/*.jar
         loaders:
-            - "paper"
+          - "paper"
         game_versions:
-            - "1.21.1"
+          - "1.21.1"
         version_type: release
 
     - name: Create Release
