@@ -18,10 +18,10 @@ jobs:
         distribution: 'temurin'
 
     - name: Make gradlew executable
-      run: chmod +x ./gradlew
+      run: chmod +x chatr/gradlew
 
     - name: Build with Gradle
-      run: ./gradlew clean build reobfJar
+      run: cd chatr && ./gradlew clean build reobfJar
 
     - name: Extract version from build.gradle.kts
       run: |
