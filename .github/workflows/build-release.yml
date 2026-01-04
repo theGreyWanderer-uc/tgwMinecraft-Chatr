@@ -36,19 +36,17 @@ jobs:
 
     - name: Publish to Modrinth
       if: github.ref == 'refs/heads/main'
-      uses: modrinth/action@main
-      with:
-        token: ${{ secrets.MODRINTH_TOKEN }}
-        project_id: 1AEV6tyB
-        version_number: ${{ env.VERSION }}
-        name: Chatr ${{ env.VERSION }}
-        changelog: ${{ github.event.head_commit.message }}
-        files: chatr/build/libs/*.jar
-        loaders: |
-          - paper
-        game_versions: |
-          - 1.21.1
-        version_type: release
+      run: |
+        curl -X POST https://api.modrinth.com/v2/version \
+          -H "Authorization: Bearer ${{ secrets.MODRINTH_TOKEN }}" \
+          -F "project_id=1AEV6tyB" \
+          -F "version_number=${{ env.VERSION }}" \
+          -F "name=Chatr ${{ env.VERSION }}" \
+          -F "changelog=${{ github.event.head_commit.message }}" \
+          -F "files=@chatr/build/libs/Chatr-${{ env.VERSION }}.jar" \
+          -F 'loaders=["paper"]' \
+          -F 'game_versions=["1.21.1"]' \
+          -F "version_type=release"
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/v')
